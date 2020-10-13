@@ -1,42 +1,14 @@
-from Automatons.BaseAutomaton import BaseAutomaton
-import os
-import time
+from mavsdk import System
+import time, os
 
-class FtpAutomaton (BaseAutomaton):
+class Comm:
 
-    def __init__(self, drone, loop, remoteDir, localDir):
-        self.interval_sec = 5
-        self.drone = drone
-        self.loop = loop
-        self.remoteDir = remoteDir
-        self.localDir = localDir
+    def __init__(self, loop, device, baudrate):
+        self._loop = loop
 
-    def execute(self):
-        self.loop.run_until_complete(self.reconcileFiles())
-
-    async def reconcileFiles(self):
-
-        #await self.drone.ftp.set_root_directory(self.remoteDir)
-
-        files = await self.listDirectory(self.remoteDir)
-
-        for file in files:
-            done = False
-            while not done:
-                downloaded = await self.downloadFile(file, self.localDir)
-                print("Download worked: ", downloaded)
-
-                localFile = os.path.join(self.localDir, os.path.basename(file))
-                if os.path.exists(localFile):
-                    isSame = await self.areFilesIdentical(localFile, file)
-                    if not isSame:
-                        print("Local file and remote file are not the same. Retrying download.")
-                        os.remove(localFile)
-                    else:
-                        await self.deleteRemoteFile(file)
-                        done = True
-                else:
-                    print("Local file does not exist. Retrying download")
+        self._drone = System(mavsdk_server_address='localhost', port=50051)
+        # self.drone = System()
+        self._loop.run_until_complete(self._drone.connect(system_address="serial://" + device + ":" + str(baudrate)))
 
     async def listDirectory(self, dir):
         print("List remote directory for ", dir, ":")
@@ -44,16 +16,16 @@ class FtpAutomaton (BaseAutomaton):
         files = []
         while not done:
             try:
-                files = await self.drone.ftp.list_directory(dir)
+                files = await self._drone.ftp.list_directory(dir)
                 print(files)
                 done = True
             except:
                 try:
-                    await self.drone.ftp.reset()
+                    await self._drone.ftp.reset()
                 except:
                     pass
                 print("List directory failed... trying again")
-                time.sleep(2)
+                time.sleep(1)
         return self.cleanDirectoryList(dir, files)
 
     def cleanDirectoryList(self, dir, files):
@@ -71,7 +43,7 @@ class FtpAutomaton (BaseAutomaton):
         done = False
         while not done:
             try:
-                progress = self.drone.ftp.download(remoteFile, localDir)
+                progress = self._drone.ftp.download(remoteFile, localDir)
                 async for byteDisplay in progress:
                     print("Bytes downloaded: ", byteDisplay.bytes_transferred, "/", byteDisplay.total_bytes)
                 done = True
@@ -80,11 +52,11 @@ class FtpAutomaton (BaseAutomaton):
                 if os.path.exists(localFile):
                     os.remove(localFile)
                 try:
-                    await self.drone.ftp.reset()
+                    await self._drone.ftp.reset()
                 except:
                     pass
                 print("Download file failed... trying again")
-                time.sleep(2)
+                time.sleep(1)
         return done
 
     async def areFilesIdentical(self, localFile, remoteFile):
@@ -92,15 +64,15 @@ class FtpAutomaton (BaseAutomaton):
         isSame = False
         while not done:
             try:
-                isSame = await self.drone.ftp.are_files_identical(localFile, remoteFile)
+                isSame = await self._drone.ftp.are_files_identical(localFile, remoteFile)
                 done = True
             except:
                 try:
-                    await self.drone.ftp.reset()
+                    await self._drone.ftp.reset()
                 except:
                     pass
                 print("Checking if files are identical failed... trying again")
-                time.sleep(2)
+                time.sleep(1)
         return isSame
 
     async def deleteRemoteFile(self, remoteFile):
@@ -109,14 +81,14 @@ class FtpAutomaton (BaseAutomaton):
         deleted = False
         while not done:
             try:
-                await self.drone.ftp.remove_file(remoteFile)
+                await self._drone.ftp.remove_file(remoteFile)
                 deleted = True
                 done = True
             except:
                 try:
-                    await self.drone.ftp.reset()
+                    await self._drone.ftp.reset()
                 except:
                     pass
                 print("Deleting file failed... trying again")
-                time.sleep(2)
+                time.sleep(1)
         return deleted
