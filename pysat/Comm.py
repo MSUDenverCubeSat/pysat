@@ -1,5 +1,6 @@
 from mavsdk import System
 import time, os
+from pysat.Result import Result
 
 class Comm:
 
@@ -9,12 +10,15 @@ class Comm:
         self._drone = System(mavsdk_server_address='localhost', port=50051)
         # self.drone = System()
         self._loop.run_until_complete(self._drone.connect(system_address="serial://" + device + ":" + str(baudrate)))
+        self._sleep_secs = 1
+        self._retries = 10
 
     async def listDirectory(self, dir):
         print("List remote directory for ", dir, ":")
         done = False
         files = []
-        while not done:
+        num_try = 1
+        while not done and num_try < self._retries:
             try:
                 files = await self._drone.ftp.list_directory(dir)
                 print(files)
@@ -25,30 +29,32 @@ class Comm:
                 except:
                     pass
                 print("List directory failed... trying again")
-                time.sleep(1)
-        return self.cleanDirectoryList(dir, files)
+                time.sleep(self._sleep_secs)
+                num_try += 1
+        return Result(done, self._cleanDirectoryList(dir, files))
 
-    def cleanDirectoryList(self, dir, files):
+    def _cleanDirectoryList(self, dir, files):
         ret = []
         for file in files:
-            if file != 'S':
+            if file != 'S':     # for some reason the list directory will occasionally return 'S'
                 cleanFile = os.path.join(dir, os.path.basename(file.split('\t')[0]))
 
                 if not ret.__contains__(cleanFile):
                     ret.append(cleanFile)
         return ret
 
-    async def downloadFile(self, remoteFile, localDir):
-        print("Downloading remote file ", remoteFile, " to local directory ", localDir)
+    async def downloadFile(self, remote_file, local_dir):
+        print("Downloading remote file ", remote_file, " to local directory ", local_dir)
         done = False
-        while not done:
+        num_try = 1
+        while not done and num_try < self._retries:
             try:
-                progress = self._drone.ftp.download(remoteFile, localDir)
+                progress = self._drone.ftp.download(remote_file, local_dir)
                 async for byteDisplay in progress:
                     print("Bytes downloaded: ", byteDisplay.bytes_transferred, "/", byteDisplay.total_bytes)
                 done = True
             except:
-                localFile = os.path.join(localDir, os.path.basename(remoteFile))
+                localFile = os.path.join(local_dir, os.path.basename(remote_file))
                 if os.path.exists(localFile):
                     os.remove(localFile)
                 try:
@@ -56,15 +62,17 @@ class Comm:
                 except:
                     pass
                 print("Download file failed... trying again")
-                time.sleep(1)
-        return done
+                time.sleep(self._sleep_secs)
+                num_try += 1
+        return Result(done, done)
 
-    async def areFilesIdentical(self, localFile, remoteFile):
+    async def areFilesIdentical(self, local_file, remote_file):
         done = False
         isSame = False
-        while not done:
+        num_try = 1
+        while not done and num_try < self._retries:
             try:
-                isSame = await self._drone.ftp.are_files_identical(localFile, remoteFile)
+                isSame = await self._drone.ftp.are_files_identical(local_file, remote_file)
                 done = True
             except:
                 try:
@@ -72,16 +80,18 @@ class Comm:
                 except:
                     pass
                 print("Checking if files are identical failed... trying again")
-                time.sleep(1)
-        return isSame
+                time.sleep(self._sleep_secs)
+                num_try += 1
+        return Result(done, isSame)
 
-    async def deleteRemoteFile(self, remoteFile):
-        print("Deleting remote file ", remoteFile)
+    async def deleteRemoteFile(self, remote_file):
+        print("Deleting remote file ", remote_file)
         done = False
         deleted = False
-        while not done:
+        num_try = 1
+        while not done and num_try < self._retries:
             try:
-                await self._drone.ftp.remove_file(remoteFile)
+                await self._drone.ftp.remove_file(remote_file)
                 deleted = True
                 done = True
             except:
@@ -90,5 +100,6 @@ class Comm:
                 except:
                     pass
                 print("Deleting file failed... trying again")
-                time.sleep(1)
-        return deleted
+                time.sleep(self._sleep_secs)
+                num_try += 1
+        return Result(done, deleted)

@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 import asyncio
 from pysat.Comm import Comm
 from pysat.Automatons.FtpAutomaton import FtpAutomaton
-from pysat.Automatons.LoggerAutomaton import LoggerAutomaton
+from pysat.Automatons.SensorAutomaton import SensorAutomaton
 
 
 def run(args):
@@ -14,7 +14,7 @@ def run(args):
             a = FtpAutomaton(comm, loop, "/home/pi/files", "/home/pi/files")
             a.start()
     elif args.mode == "sat":
-        b = LoggerAutomaton(args.gps_device, args.gps_baudrate, "/home/pi/files")
+        b = SensorAutomaton(args.gps_device, args.gps_baudrate, "/home/pi/files")
         b.start()
     else:
         print(args.mode, "is not a valid mode")

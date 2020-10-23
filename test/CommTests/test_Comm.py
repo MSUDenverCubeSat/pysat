@@ -10,4 +10,4 @@ class CommTests(unittest.TestCase):
     def test_run_execute(self):
         loop = asyncio.get_event_loop()
         comm = Comm(loop, self.device, self.baudrate)
-        comm.listDirectory("/home")
+        loop.run_until_complete(comm.listDirectory("/home"))

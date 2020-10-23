@@ -15,7 +15,8 @@ class FtpAutomaton (BaseAutomaton):
 
     async def reconcileFiles(self):
 
-        files = await self.comm.listDirectory(self.remote_dir)
+        result = await self.comm.listDirectory(self.remote_dir)
+        files = result.result
 
         for file in files:
             done = False

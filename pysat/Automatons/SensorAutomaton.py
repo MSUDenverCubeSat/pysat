@@ -1,7 +1,7 @@
 from pysat.Automatons.BaseAutomaton import BaseAutomaton
 import subprocess, serial, time
 
-class LoggerAutomaton (BaseAutomaton):
+class SensorAutomaton (BaseAutomaton):
 
     def __init__(self, gps_device, gps_baudrate, local_dir):
         self.interval_sec = 5
