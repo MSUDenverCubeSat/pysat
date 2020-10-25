@@ -1,5 +1,6 @@
 from pysat.Automatons.BaseAutomaton import BaseAutomaton
-import subprocess, serial, time
+from pysat.Logger import Logger
+import subprocess, serial, datetime
 
 class SensorAutomaton (BaseAutomaton):
 
@@ -8,6 +9,7 @@ class SensorAutomaton (BaseAutomaton):
         self.local_dir = local_dir
         self.gps_device = gps_device
         self.gps_baudrate = gps_baudrate
+        self.logger = Logger()
 
     def execute(self):
         items = []
@@ -18,7 +20,9 @@ class SensorAutomaton (BaseAutomaton):
         gps = self._get_gps_data()
         items.extend(gps)
 
-        items.append(str(time.time()))
+        date = datetime.datetime.utcnow()
+        time_stamp = date.strftime("%d-%b-%Y (%H:%M:%S.%f)")
+        items.append(time_stamp)
 
         self._log(items)
 
@@ -64,4 +68,4 @@ class SensorAutomaton (BaseAutomaton):
         for item in items:
             line += "\"" + item.rstrip() + "\","
         print(line[:-1])
-        # logger.log
+        self.logger.log(line[:-1])
