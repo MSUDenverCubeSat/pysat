@@ -11,7 +11,7 @@ class Comm:
         # self.drone = System()
         self._loop.run_until_complete(self._drone.connect(system_address="serial://" + device + ":" + str(baudrate)))
         self._sleep_secs = 1
-        self._retries = 10
+        self._retries = 5
 
     async def listDirectory(self, dir):
         print("List remote directory for ", dir, ":")

@@ -9,7 +9,7 @@ class SensorAutomaton (BaseAutomaton):
         self.local_dir = local_dir
         self.gps_device = gps_device
         self.gps_baudrate = gps_baudrate
-        self.logger = Logger()
+        self.logger = Logger("/home/pi/Temp_Files", "/home/pi/Done_Files")
 
     def execute(self):
         items = []

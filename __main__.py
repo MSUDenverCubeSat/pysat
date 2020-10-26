@@ -11,7 +11,7 @@ def run(args):
         if args.comm_device != None:
             loop = asyncio.get_event_loop()
             comm = Comm(loop, args.comm_device, args.comm_baudrate)
-            a = FtpAutomaton(comm, loop, "/home/pi/files", "/home/pi/files")
+            a = FtpAutomaton(comm, loop, "/home/pi/Done_Files", "/home/pi/files")
             a.start()
     elif args.mode == "sat":
         b = SensorAutomaton(args.gps_device, args.gps_baudrate, "/home/pi/files")

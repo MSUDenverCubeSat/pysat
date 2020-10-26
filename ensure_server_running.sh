@@ -7,7 +7,7 @@ else
 	 ./mavsdk_server_linux-armv7 -p 50051 --system-address serial:///dev/ttyUSB0 > /dev/null &
 fi
 
-if pgrep pysat >/dev/null
+if pgrep python3 >/dev/null
 then
      echo "Process is running."
 else
