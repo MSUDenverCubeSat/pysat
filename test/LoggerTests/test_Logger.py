@@ -1,84 +1,83 @@
 import unittest
+import os
+import shutil
 from pysat.Logger import Logger
-import time
+
 
 class LoggerTests(unittest.TestCase):
 
+    temp_dir = "/home/pi/Temp_Files"
+    final_dir = "/home/pi/Done_Files"
+
+    def setUp(self):
+        try:
+            shutil.rmtree(self.temp_dir)
+        except:
+            pass
+
+        try:
+            shutil.rmtree(self.final_dir)
+        except:
+            pass
+
     def test_run_logger(self):
-        # These inputs should all write to file1.txt
-        t = Logger()
-        t.log("file1")
-        t.log("file1")
-        t.log("file1")
+        logger = Logger(self.temp_dir, self.final_dir)
 
-        # These inputs should all write to file2.txt
-        time.sleep(5)
-        t.log("file2")
-        t.log("file2")
+        for num in range(1, logger._lines_per_file + 2):
+            logger.log("Line %s" % num)
 
-        # These inputs should all write to file3.txt
-        time.sleep(5)
-        t.log("file3")
+        file1 = open(os.path.join(self.final_dir, "file1.txt"), "r")
+        lines = file1.readlines()
+        file1.close()
+        self.assertEqual(lines.__len__(), logger._lines_per_file)
+        num = 1
+        for line in lines:
+            self.assertEqual(line, "Line %s\n" % num)
+            num += 1
 
-        # These inputs should all write to file4.txt
-        time.sleep(5)
-        t.log("file4")
-        t.log("file4")
-        t.log("file4")
-        t.log("file4")
+        file2 = open(os.path.join(self.temp_dir, "file2.txt"), "r")
+        lines = file2.readlines()
+        file2.close()
+        self.assertEqual(lines.__len__(), 1)
+        self.assertEqual(lines[0], "Line %s\n" % num)
 
-        # These inputs should all write to file5.txt
-        time.sleep(5)
-        t.log("file5")
-        t.log("file5")
-        t.log("file5")
-        t.log("file5")
-        t.log("file5")
-        t.log("file5")
-        t.log("file5")
-        t.log("file5")
+        self.setUp()
 
-        # These inputs should all write to file6.txt
-        time.sleep(6)
-        t.log("file6")
-        # These inputs should also write to file6.txt
-        time.sleep(1)
-        t.log("forLoop")
-        i = 0
-        j = 2
-        for cnt in range(i, j + 1):
-            t.log(cnt)
+    def test_run_logger_moves_old_files(self):
+        logger = Logger(self.temp_dir, self.final_dir)
+        logger.log("Line 1")
+        self.assertEqual(os.path.exists(os.path.join(self.temp_dir, "file1.txt")), True)
 
-        # These inputs should all write to file7.txt
-        time.sleep(3)
-        t.log("file7")
-        t.log("file7")
-        # These inputs should also write to file7.txt
-        time.sleep(1)
-        self.method_test1(t)
-        self.method_test2(t)
+        for num in range(2, logger._lines_per_file + 1):
+            logger.log("Line %s" % num)
 
-        # These inputs should all write to file8.txt
-        time.sleep(5)
-        self.method_test2(t)
+        self.assertEqual(os.path.exists(os.path.join(self.temp_dir, "file1.txt")), True)
+        self.assertEqual(os.path.exists(os.path.join(self.final_dir, "file1.txt")), False)
 
-        # These inputs should all write to file9.txt
-        time.sleep(5)
-        self.method_test_characters(t)
+        logger.log("Line 1")
+        self.assertEqual(os.path.exists(os.path.join(self.temp_dir, "file1.txt")), False)
+        self.assertEqual(os.path.exists(os.path.join(self.temp_dir, "file2.txt")), True)
+        self.assertEqual(os.path.exists(os.path.join(self.final_dir, "file1.txt")), True)
 
-    def method_test1(self, t):
-        i = 0
-        j = 42
-        for cnt in range(i, j+1):
-            t.log(cnt)
-        t.log("\n---------------END OF FILE METHOD_TEST1-----------------------------------")
+        self.setUp()
 
-    def method_test2(self, t):
-        i = 1
-        j = 24
-        for cnt in range(i, j+1):
-            t.log(cnt)
-        t.log("\n---------------END OF FILE METHOD_TEST2-----------------------------------")
+    def test_run_logger(self):
+        logger = Logger(self.temp_dir, self.final_dir)
+        logger.log(1)
 
-    def method_test_characters(self, t):
-        t.log("hello, 1, $%^#@#$, 100.9, 23.3456738")
+        logger = Logger(self.temp_dir, self.final_dir)
+        logger.log(2)
+
+        file1 = open(os.path.join(self.final_dir, "file1.txt"), "r")
+        lines = file1.readlines()
+        file1.close()
+        self.assertEqual(lines.__len__(), 1)
+        self.assertEqual(lines[0], "1\n")
+
+        file2 = open(os.path.join(self.temp_dir, "file2.txt"), "r")
+        lines = file2.readlines()
+        file2.close()
+        self.assertEqual(lines.__len__(), 1)
+        self.assertEqual(lines[0], "2\n")
+
+        self.setUp()

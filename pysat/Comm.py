@@ -8,13 +8,13 @@ class Comm:
         self._loop = loop
 
         self._drone = System(mavsdk_server_address='localhost', port=50051)
-        # self.drone = System()
+        #self._drone = System()
         self._loop.run_until_complete(self._drone.connect(system_address="serial://" + device + ":" + str(baudrate)))
         self._sleep_secs = 1
         self._retries = 5
 
     async def listDirectory(self, dir):
-        print("List remote directory for ", dir, ":")
+        print("List remote directory for", dir + ":")
         done = False
         files = []
         num_try = 1
@@ -36,7 +36,7 @@ class Comm:
     def _cleanDirectoryList(self, dir, files):
         ret = []
         for file in files:
-            if file != 'S':     # for some reason the list directory will occasionally return 'S'
+            if file != 'S' and file != '':     # for some reason the list directory will occasionally return 'S'
                 cleanFile = os.path.join(dir, os.path.basename(file.split('\t')[0]))
 
                 if not ret.__contains__(cleanFile):
@@ -44,7 +44,7 @@ class Comm:
         return ret
 
     async def downloadFile(self, remote_file, local_dir):
-        print("Downloading remote file ", remote_file, " to local directory ", local_dir)
+        print("Downloading remote file", remote_file, "to local directory", local_dir)
         done = False
         num_try = 1
         while not done and num_try < self._retries:
@@ -85,7 +85,7 @@ class Comm:
         return Result(done, isSame)
 
     async def deleteRemoteFile(self, remote_file):
-        print("Deleting remote file ", remote_file)
+        print("Deleting remote file", remote_file)
         done = False
         deleted = False
         num_try = 1

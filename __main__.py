@@ -21,6 +21,7 @@ def run(args):
 
 
 if __name__ == "__main__":
+
     parser = ArgumentParser(description=__doc__)
 
     parser.add_argument("--comm_baudrate", type=int,
