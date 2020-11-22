@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pysat is is designed to run in two different modes.
+Pysat is designed to run in two different modes.
 1. Satellite mode which will collect and log sensor data to files and the ground station.
 2. Ground Station mode which will download the sensor data files from the remote machine over the connected radios.
 (The software is fully compatible with Python 3.7)
@@ -74,3 +74,9 @@ pysat is easy to use. Simply run it using python3 and make sure to give it the d
 ```sh
 python3 pysat --device /dev/ttyUSB0
 ```
+## Components Used
+
+Raspberry Pi 4
+
+RFD 900x
+
