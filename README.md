@@ -1,18 +1,36 @@
-# pysat
+# Pysat
 
 ## Overview
 
-pysat is is designed to run in two different modes. Satelite mode which will collect and log sensor data 
-to files and the Ground station mode which will download the sensor data files from the remote machine over the connected radios. 
-It's also fully compatible with Python 3.6+
+Pysat is is designed to run in two different modes.
+1. Satellite mode which will collect and log sensor data to files and the ground station.
+2. Ground Station mode which will download the sensor data files from the remote machine over the connected radios.
+(The software is fully compatible with Python 3.7)
 
 Satelite Mode Features:
 
  - Logs GPS data
+ 	- This data includes real-time location data (altitude, latitude, longitude)
+ - Logs Internal temperature data
+ 	- Data is gathered from the internal temperature sensor of the raspberry pi
+	
+ - Planned Features (To be implemented based on future mission planning)
+ - X-ray spectrometer (Space Weather Mission, CubeSat Radio Interferometry Experiment (CURIE))
+ 	- Research particle acceleration in solar flares, performing X-ray spectroscopy of solar flares
+ - Optimal Control (Altitude and Atitude Adjustment, Satellite for Optimal Control and Imaging (SOC-I))
+ 	- Implement an experimental altitude and attitude for CubeSats in LEO, orbital orientation
+ - Infared Imaging (Earth Weather Mission, BeaverCube II)
+ 	- Ocean surface temperature, cloud composition, study climate change events for NASA earth science mission
+ - Wildfire Detection and Monitoring (Earth Weather Mission, FUEGO)
+ 	- Infared image monitoring and processing for early wildfire detection and monitoring 
 
 Ground Station Mode Features:
 
  - Downloads remote files and deletes them from the remote machine over radios
+ - It is necessary to ensure the connection between the ground station and the satellite through a tracking antenna,
+   or and antenna suitably powerful, and sesnitive enough to consistently link the two primary systems
+ - The team is required to fulfill an estimated orbital track to predict where the CubeSat is and point the
+   the directional antenna at the CubeSat's orbital path and download the data from the CubeSat
 
 ## Install / uninstall
 
