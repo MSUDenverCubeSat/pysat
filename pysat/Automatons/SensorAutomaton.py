@@ -6,12 +6,11 @@ import serial
 
 class SensorAutomaton (BaseAutomaton):
 
-    def __init__(self, gps_device, gps_baudrate, local_dir):
+    def __init__(self, gps_device, gps_baudrate, temp_dir, final_dir):
         self.interval_sec = 5
-        self.local_dir = local_dir
         self.gps_device = gps_device
         self.gps_baudrate = gps_baudrate
-        self.logger = Logger("/home/pi/Temp_Files", "/home/pi/Done_Files")
+        self.logger = Logger(temp_dir, final_dir)
         self.is_in_flight_mode = False
 
     def execute(self):

@@ -1,36 +1,26 @@
-from argparse import ArgumentParser
 import asyncio
 from pysat.Comm import Comm
 from pysat.Automatons.FtpAutomaton import FtpAutomaton
 from pysat.Automatons.SensorAutomaton import SensorAutomaton
+from pysat.Config import Config
+from pysat.Config import Mode
 
 
-def run(args):
+def run_satellite_mode(conf):
+    b = SensorAutomaton(conf.gps_device, conf.gps_baudrate, conf.temp_dir, conf.final_dir)
+    b.start()
 
-    if args.mode == "ground":
-        if args.comm_device != None:
-            loop = asyncio.get_event_loop()
-            comm = Comm(loop, args.comm_device, args.comm_baudrate)
-            a = FtpAutomaton(comm, loop, "/home/pi/Done_Files", "/home/pi/files")
-            a.start()
-    elif args.mode == "sat":
-        b = SensorAutomaton(args.gps_device, args.gps_baudrate, "/home/pi/files")
-        b.start()
-    else:
-        print(args.mode, "is not a valid mode")
 
+def run_ground_mode(conf):
+    loop = asyncio.get_event_loop()
+    comm = Comm(loop, conf.comm_device, conf.comm_baudrate)
+    a = FtpAutomaton(comm, loop, conf.final_dir, conf.downloaded_files_dir)
+    a.start()
+
+
+modes = {Mode.SAT: run_satellite_mode,
+         Mode.GROUND: run_ground_mode}
 
 if __name__ == "__main__":
-
-    parser = ArgumentParser(description=__doc__)
-
-    parser.add_argument("--comm_baudrate", type=int,
-                        help="comm device baud rate", default=57600)
-    parser.add_argument("--gps_baudrate", type=int,
-                        help="comm device baud rate", default=9600)
-    parser.add_argument("--gps_device", help="gps serial device")
-    parser.add_argument("--comm_device", help="comm serial device")
-    parser.add_argument("--mode", required=True, help="either sat or ground")
-    args = parser.parse_args()
-
-    run(args)
+    config = Config.get_config()
+    modes[config.mode](config)

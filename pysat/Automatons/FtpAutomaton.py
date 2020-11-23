@@ -7,7 +7,7 @@ import os
 class FtpAutomaton (BaseAutomaton):
 
     def __init__(self, comm, loop, remote_dir, local_dir):
-        self.interval_sec = 5
+        self.interval_sec = 2
         self.calls_per_execute = 5
         self.comm = comm
         self.loop = loop

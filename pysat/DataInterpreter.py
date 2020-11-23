@@ -1,5 +1,7 @@
 import os
 import pynmea2
+'''This was made quickly to analyze our launch data and does not have any real purpose in the overall program'''
+'''This might be helpful to analyze your own data our build this out into an MVC website that shows you the data'''
 
 
 class DataInterpreter:
