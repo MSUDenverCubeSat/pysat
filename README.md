@@ -14,7 +14,7 @@ Satelite Mode Features:
  - Logs Internal temperature data
  	- Data is gathered from the internal temperature sensor of the raspberry pi
 	
- 	- Planned Features (To be implemented based on future mission planning)
+ - Planned Features (To be implemented based on future mission planning)
  	- X-ray spectrometer (Space Weather Mission, CubeSat Radio Interferometry Experiment (CURIE))
  		- Research particle acceleration in solar flares, performing X-ray spectroscopy of solar flares
  	- Optimal Control (Altitude and Atitude Adjustment, Satellite for Optimal Control and Imaging (SOC-I))
