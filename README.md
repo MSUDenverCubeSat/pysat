@@ -118,3 +118,14 @@ python3 pysat --device /dev/ttyUSB0
  - Dimensions: 4.33 x 0.59 x 2.76 inches
  - Capacity: 5000 mAh 
  - Ports: USB ports (up to 2.1A/1A)
+ 
+ ## Configuration
+ ```sh
+ {
+    "mode": "SAT",
+    "comm_device": "/dev/ttyUSB0",
+    "comm_baudrate": "57600",
+    "gps_device": "/dev/ttyACM0",
+    "gps_baudrate": "9600"
+}
+```
