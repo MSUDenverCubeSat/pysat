@@ -88,15 +88,15 @@ python3 pysat --device /dev/ttyUSB0
  - Ports: (x2)USB 2, (x2)USB 3, (x1)Gigabit Ethernet port, (x1)Raspberry Pi camera port
  - Software: ARMv8 Instruction Set, Currently running Python 3.7
  - GPIO Pins: (x28) user GPIO pins
- 	- Up to 6x UART
-	– Up to 6x I2C
-	– Up to 5x SPI
-	– 1x SDIO interface
-	– 1x DPI (Parallel RGB Display)
-	– 1x PCM
-	– Up to 2x PWM channels
-	– Up to 3x GPCLK outputs
- - Storage: 
+ 	- Up to (x6) UART
+	– Up to (x6) I2C
+	– Up to (x5) SPI
+	– (x1) SDIO interface
+	– (x1) DPI (Parallel RGB Display)
+	– (x1) PCM
+	– Up to (x2) PWM channels
+	– Up to (x3) GPCLK outputs
+ - Storage: 32GB
  
 (RF Radio) RFD 900+
  - Frequency Range:  902 - 928 MHz (USA)
