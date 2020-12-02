@@ -10,6 +10,7 @@ class Mode(Enum):
     SAT = 'SAT'
     GROUND = 'GROUND'
 
+
 @dataclass
 class Configuration:
     mode: Mode
@@ -27,16 +28,16 @@ class Config:
     _converters = {
         Mode: Mode,
     }
+    _config_full_path = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(_config_file))),
+                                     _config_file)
 
     @staticmethod
     def get_config():
-        with open(os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(Config._config_file))), Config._config_file), "r") as file:
+        with open(Config._config_full_path, "r") as file:
             raw_config = json.load(file)
 
-        config = dacite.from_dict(
-            data_class=Configuration, data=raw_config,
-            config=dacite.Config(type_hooks=Config._converters),
-        )
+        config = dacite.from_dict(data_class=Configuration, data=raw_config,
+                                  config=dacite.Config(type_hooks=Config._converters))
         return config
 
 

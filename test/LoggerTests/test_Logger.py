@@ -61,7 +61,7 @@ class LoggerTests(unittest.TestCase):
 
         self.setUp()
 
-    def test_run_logger(self):
+    def test_run_logger_picks_up_where_left_off(self):
         logger = Logger(self.temp_dir, self.final_dir)
         logger.log(1)
 

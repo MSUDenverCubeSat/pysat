@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 
 class BaseAutomaton (ABC):
-    interval_sec = 10
+    _interval_sec = 10
     __active__ = False
 
     def start(self):
@@ -27,7 +27,7 @@ class BaseAutomaton (ABC):
 
     def _reset_timer(self):
         if self.__active__:
-            self.__timer__ = Timer(self.interval_sec, self._timer_up, ())
+            self.__timer__ = Timer(self._interval_sec, self._timer_up)
             self.__timer__.start()
 
     @abstractmethod
