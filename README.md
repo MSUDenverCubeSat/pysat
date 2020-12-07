@@ -94,6 +94,13 @@ Under the pysat directory there is a file called config.json. This is where you 
 }
 ```
 
+## Testing
+ 
+```sh
+cd {your local directory}/pysat
+python3 -m unittest
+```
+
 ## Components Used
 
 (CPU) Raspberry Pi 4
