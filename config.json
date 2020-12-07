@@ -1,0 +1,12 @@
+{
+    "mode": "GROUND",
+    "comm_device": "/dev/ttyUSB0",
+    "comm_baudrate": 57600,
+    "gps_device": "/dev/ttyACM0",
+    "gps_baudrate": 9600,
+    "sat_temp_dir": "/home/pi/Temp_Files",
+    "sat_final_dir": "/home/pi/Done_Files",
+    "downloaded_files_dir": "/home/pi/files",
+    "mavsdk_server_address": "localhost",
+    "mavsdk_server_port": 50051
+}

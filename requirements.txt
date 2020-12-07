@@ -1,0 +1,4 @@
+mavsdk
+pynmea2
+serial
+dacite
