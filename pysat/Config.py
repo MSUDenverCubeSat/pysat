@@ -21,15 +21,16 @@ class Configuration:
     sat_temp_dir: str
     sat_final_dir: str
     downloaded_files_dir: str
+    mavsdk_server_address: str
+    mavsdk_server_port: int
 
 
 class Config:
     _config_file = "config.json"
+    _config_full_path = os.path.join(os.getcwd().split('pysat')[0], "pysat", _config_file)
     _converters = {
         Mode: Mode,
     }
-    _config_full_path = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(_config_file))),
-                                     _config_file)
 
     @staticmethod
     def get_config():

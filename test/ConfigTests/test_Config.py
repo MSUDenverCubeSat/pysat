@@ -22,7 +22,9 @@ class ConfigTests(unittest.TestCase):
                 "gps_baudrate": 9600,
                 "sat_temp_dir": "/home/pi/Temp_Files",
                 "sat_final_dir": "/home/pi/Done_Files",
-                "downloaded_files_dir": "/home/pi/files"
+                "downloaded_files_dir": "/home/pi/files",
+                "mavsdk_server_address": "localhost",
+                "mavsdk_server_port": 50051
             }''')
         with patch('builtins.open', m):
             self.assertRaises(ValueError, Config.get_config)
@@ -36,7 +38,9 @@ class ConfigTests(unittest.TestCase):
                 "gps_baudrate": 9600,
                 "sat_temp_dir": "/home/pi/Temp_Files",
                 "sat_final_dir": "/home/pi/Done_Files",
-                "downloaded_files_dir": "/home/pi/files"
+                "downloaded_files_dir": "/home/pi/files",
+                "mavsdk_server_address": "localhost",
+                "mavsdk_server_port": 50051
             }''')
         with patch('builtins.open', m):
             self.assertRaises(exceptions.WrongTypeError, Config.get_config)
@@ -50,7 +54,9 @@ class ConfigTests(unittest.TestCase):
                 "gps_baudrate": 9600,
                 "sat_temp_dir": "/home/pi/Temp_Files",
                 "sat_final_dir": "/home/pi/Done_Files",
-                "downloaded_files_dir": "/home/pi/files"
+                "downloaded_files_dir": "/home/pi/files",
+                "mavsdk_server_address": "localhost",
+                "mavsdk_server_port": 50051
             }''')
         with patch('builtins.open', m):
             self.assertRaises(exceptions.WrongTypeError, Config.get_config)

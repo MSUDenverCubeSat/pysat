@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 
 
 class BaseAutomaton (ABC):
+    """Classes inheriting from this should do a task repeatedly every so often"""
     _interval_sec = 10
     __active__ = False
 

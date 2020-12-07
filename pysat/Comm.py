@@ -5,10 +5,11 @@ from pysat.Result import Result
 
 
 class Comm:
+    """Handles all of the communication over the radios"""
 
-    def __init__(self, loop, device, baudrate):
+    def __init__(self, loop, server_address, server_port, device, baudrate):
         self._loop = loop
-        self._drone = System(mavsdk_server_address='localhost', port=50051)
+        self._drone = System(mavsdk_server_address=server_address, port=server_port)
         self._loop.run_until_complete(self._drone.connect(system_address="serial://" + device + ":" + str(baudrate)))
 
     async def list_directory(self, remote_dir):

@@ -9,6 +9,8 @@ class FtpAutomaton (BaseAutomaton):
     def __init__(self, comm, loop, remote_dir, local_dir):
         self._interval_sec = 2
         self._calls_per_execute = 5
+        self._max_delete_retries = self._calls_per_execute
+        self._current_delete_retry = 0
         self._comm = comm
         self._loop = loop
         self._remote_dir = remote_dir
@@ -54,11 +56,13 @@ class FtpAutomaton (BaseAutomaton):
     async def _delete_remote_file(self):
         remote_file = os.path.join(self._remote_dir, os.path.basename(self._file_enumerator.get_current_file_name()))
         delete_result = await self._comm.delete_remote_file(remote_file)
-        if delete_result.success:
-            if delete_result.result:
-                print("Remote file deleted.")
-                self._file_enumerator.move_to_next_file()
-                self._file_state = FileState.NeedDownload
+        if (delete_result.success and delete_result.result) or self._current_delete_retry >= self._max_delete_retries:
+            print("Remote file deleted.")
+            self._file_enumerator.move_to_next_file()
+            self._file_state = FileState.NeedDownload
+            self._current_delete_retry = 0
+        else:
+            self._current_delete_retry += 1
 
 
 class FileState(Enum):
