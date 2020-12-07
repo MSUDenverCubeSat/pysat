@@ -1,11 +1,12 @@
 from mavsdk import System
-import time
 import os
 from pysat.Result import Result
 
 
 class Comm:
-    """Handles all of the communication over the radios"""
+    """Handles all of the communication over the radios
+    https://github.com/mavlink/MAVSDK-Python
+    http://mavsdk-python-docs.s3-website.eu-central-1.amazonaws.com/index.html"""
 
     def __init__(self, loop, server_address, server_port, device, baudrate):
         self._loop = loop
