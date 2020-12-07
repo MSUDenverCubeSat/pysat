@@ -3,7 +3,7 @@
 ## Overview
 
 Pysat is designed to run in two different modes.
-1. Satellite mode which will collect and log sensor data to files and the ground station.
+1. Satellite mode which will collect and log sensor data to files.
 2. Ground Station mode which will download the sensor data files from the remote machine over the connected radios.
 (The software is fully compatible with Python 3.7)
 
@@ -28,30 +28,30 @@ Ground Station Mode Features:
 
  - Downloads remote files and deletes them from the remote machine over radios
  - It is necessary to ensure the connection between the ground station and the satellite through a tracking antenna,
-   or and antenna suitably powerful, and sesnitive enough to consistently link the two primary systems
+   or an antenna suitably powerful, and sesnitive enough to consistently link the two primary systems
  - The team is required to fulfill an estimated orbital track to predict where the CubeSat is and point the
    the directional antenna at the CubeSat's orbital path and download the data from the CubeSat
 
 ## Install / uninstall
 
-Install by cloning from git and making two files executable
+Install by cloning from git and making two files executable. The file mavsdk_server_linux-armv7 is specific to the arm v7 architecture. You can find the necessary file for your architecture at https://github.com/mavlink/MAVSDK/releases.
 
 ```sh
 git clone https://github.com/MSUDenverCubeSat/pysat.git
-chmod 777 ensure_server_running.sh
-chmod 777 mavsdk_server_linux-armv7
+chmod 777 pysat/ensure_server_running.sh
+chmod 777 pysat/mavsdk_server_linux-armv7
 ```
 
-Open ensure_server_running.sh, change line 6 to your local path where you cloned the repo, change the device to match that of your radios if needed
+Open ensure_server_running.sh, change line 6 to your local path where you cloned the repo
 
 ```sh
 #!/bin/bash
-if pgrep mavsdk >/dev/null
+if pgrep python3 >/dev/null
 then
      echo "Process is running."
 else
-     cd {Your local path to the repo}
-	   ./mavsdk_server_linux-armv7 -p 50051 --system-address serial:///dev/ttyUSB0 > /dev/null &
+     cd {your local path}
+     python3 pysat > /dev/null &
 fi
 ```
 
@@ -69,11 +69,31 @@ sudo crontab -e
    
 ## Basic Usage
 
-pysat is easy to use. Simply run it using python3 and make sure to give it the device of your radio.
+pysat is easy to use. Simply run it using python3.
 
 ```sh
-python3 pysat --device /dev/ttyUSB0
+python3 pysat
 ```
+
+## Configuration
+ 
+Under the pysat directory there is a file called config.json. This is where you should specify your device handles, baudrates, directories, and the mode (SAT or GROUND).
+ 
+```sh
+{
+    "mode": "SAT",
+    "comm_device": "/dev/ttyUSB0",
+    "comm_baudrate": 57600,
+    "gps_device": "/dev/ttyACM0",
+    "gps_baudrate": 9600,
+    "sat_temp_dir": "/home/pi/Temp_Files",
+    "sat_final_dir": "/home/pi/Done_Files",
+    "downloaded_files_dir": "/home/pi/files",
+    "mavsdk_server_address": "localhost",
+    "mavsdk_server_port": 50051
+}
+```
+
 ## Components Used
 
 (CPU) Raspberry Pi 4
@@ -118,14 +138,3 @@ python3 pysat --device /dev/ttyUSB0
  - Dimensions: 4.33 x 0.59 x 2.76 inches
  - Capacity: 5000 mAh 
  - Ports: USB ports (up to 2.1A/1A)
- 
- ## Configuration
- ```sh
- {
-    "mode": "SAT",
-    "comm_device": "/dev/ttyUSB0",
-    "comm_baudrate": "57600",
-    "gps_device": "/dev/ttyACM0",
-    "gps_baudrate": "9600"
-}
-```
