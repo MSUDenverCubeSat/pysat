@@ -14,6 +14,8 @@ class FtpAutomatonTests(unittest.TestCase):
     device = "/dev/ttyUSB0"
     remote_dir = "/home/pi/Done_Files"
     local_dir = "/home/pi/files"
+    mavsdk_server_address = "localhost"
+    mavsdk_server_port = 50051
 
     def setUp(self):
         try:
@@ -25,7 +27,7 @@ class FtpAutomatonTests(unittest.TestCase):
     def test_run_execute_twice(self, mock_print):
 
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
         ftp = FtpAutomaton(comm, loop, self.remote_dir, self.local_dir)
         self.assertEqual(ftp.__active__, False)
         ftp.start()
@@ -72,7 +74,7 @@ class FtpAutomatonTests(unittest.TestCase):
     def test_run_start_stop(self, mock_print):
 
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
         ftp = FtpAutomaton(comm, loop, self.remote_dir, self.local_dir)
         self.assertEqual(ftp.__active__, False)
         ftp.start()
@@ -108,7 +110,7 @@ class FtpAutomatonTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_execute(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
         ftp = FtpAutomaton(comm, loop, self.remote_dir, self.local_dir)
         ftp.execute()
 
@@ -134,7 +136,7 @@ class FtpAutomatonTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_download_file(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
         ftp = FtpAutomaton(comm, loop, self.remote_dir, self.local_dir)
 
         loop.run_until_complete(self.download_file(ftp))
@@ -157,7 +159,7 @@ class FtpAutomatonTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_check_files_identical_file_does_not_exist(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
         ftp = FtpAutomaton(comm, loop, self.remote_dir, self.local_dir)
         ftp._file_state = FileState.NeedIdenticalCheck
 
@@ -176,7 +178,7 @@ class FtpAutomatonTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_check_files_identical(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
         ftp = FtpAutomaton(comm, loop, self.remote_dir, self.local_dir)
         ftp._file_state = FileState.NeedIdenticalCheck
 
@@ -202,7 +204,7 @@ class FtpAutomatonTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_delete_remote_file(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
         ftp = FtpAutomaton(comm, loop, self.remote_dir, self.local_dir)
         ftp._file_state = FileState.NeedDelete
 

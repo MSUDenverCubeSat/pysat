@@ -8,11 +8,13 @@ class CommTests(unittest.TestCase):
 
     baudrate = 57600
     device = "/dev/ttyUSB0"
+    mavsdk_server_address = "localhost"
+    mavsdk_server_port = 50051
 
     @patch('builtins.print')
     def test_run_list_directory(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
 
         loop.run_until_complete(self.run_list_directory(comm))
 
@@ -30,7 +32,7 @@ class CommTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_clean_directory_list(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
 
         self.assertEqual(mock_print.mock_calls, [
             call('Waiting for mavsdk_server to be ready...'),
@@ -44,7 +46,7 @@ class CommTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_download_file(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
 
         loop.run_until_complete(self.run_download_file(comm))
 
@@ -61,8 +63,9 @@ class CommTests(unittest.TestCase):
 
     @patch('builtins.print')
     def test_run_are_files_identical(self, mock_print):
+        self.setUp()
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
 
         loop.run_until_complete(self.run_are_files_identical(comm))
 
@@ -79,7 +82,7 @@ class CommTests(unittest.TestCase):
     @patch('builtins.print')
     def test_run_delete_remote_file(self, mock_print):
         loop = asyncio.get_event_loop()
-        comm = Comm(loop, self.device, self.baudrate)
+        comm = Comm(loop, self.mavsdk_server_address, self.mavsdk_server_port, self.device, self.baudrate)
 
         loop.run_until_complete(self.run_delete_remote_file(comm))
 
