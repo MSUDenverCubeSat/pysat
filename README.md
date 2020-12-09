@@ -98,7 +98,21 @@ Under the pysat directory there is a file called config.json. This is where you 
  
 ```sh
 cd {your local directory}/pysat
-python3 -m unittest
+coverage run -m unittest
+coverage report --omit=*usr*,*.local*,*test*
+Name                                  Stmts   Miss  Cover
+---------------------------------------------------------
+pysat/Automatons/BaseAutomaton.py        26      5    81%
+pysat/Automatons/FtpAutomaton.py         54     12    78%
+pysat/Automatons/SensorAutomaton.py      58      4    93%
+pysat/Comm.py                            77      7    91%
+pysat/Config.py                          28      0   100%
+pysat/Logger.py                          37      2    95%
+pysat/Result.py                           4      0   100%
+pysat/UniqueFileNameEnumerator.py        32      2    94%
+pysat/__init__.py                         0      0   100%
+---------------------------------------------------------
+TOTAL                                   316     32    90%
 ```
 
 ## Components Used
